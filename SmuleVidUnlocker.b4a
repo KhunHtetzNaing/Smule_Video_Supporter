@@ -1,0 +1,279 @@
+﻿Version=6.5
+NumberOfModules=1
+Module1=Starter
+Build1=Default,com.htetznaing.smulevid
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: http://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="19"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~'End of default text.~\n~'AdMob~\n~AddApplicationText(~\n~<meta-data android:name="com.google.android.gms.version"~\n~  android:value="@integer/google_play_services_version"/>~\n~<activity android:name="com.google.android.gms.ads.AdActivity"~\n~  android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>~\n~)~\n~'End of AdMob
+IconFile=
+NumberOfFiles=2
+File1=fb.png
+File2=lay1.bal
+NumberOfLibraries=8
+Library1=core
+Library2=mlfiles
+Library3=phone
+Library4=floatingactionbutton
+Library5=xmllayoutbuilder
+Library6=clipboard
+Library7=admob
+Library8=mwadmobinterstitial2 (2)
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Smule Video Supporter!
+	#VersionCode: 2
+	#VersionName: 1.0
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: unspecified
+	#CanInstallToExternalStorage: False
+		#AdditionalRes: D:\Android\android-sdk\extras\google\google-play-services\libproject\google-play-services_lib\res, com.google.android.gms
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: True
+			#AdditionalRes: C:\Users\Ht3tzN4ing\Documents\My Projects\Smule Video Unlocker\FloatingButton, de.amberhome.objects.floatingactionbutton
+	#AdditionalRes: ..\resource
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Dim ad1,ad2 As Timer
+	Dim t As Timer
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+Dim ml As MLfiles
+Dim st,s As String
+Dim p As Phone
+Dim b1,b2 As Button
+Dim bbg As ColorDrawable
+Dim fb,fb1 As FloatingActionButton
+Dim res As XmlLayoutBuilder
+Dim copy As BClipboard
+Dim lb As Label
+	Dim ph As Phone
+	Dim Banner As AdView
+	Dim Interstitial As mwAdmobInterstitial
+	Dim lbf As Label
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	If ph.SdkVersion > 19 Then
+		Banner.Initialize("Banner","ca-app-pub-4173348573252986/7588994158")
+		Banner.LoadAd
+		Activity.AddView(Banner,0%x,100%y - 70dip,100%x,50dip)
+		
+		Interstitial.Initialize("Interstitial","ca-app-pub-4173348573252986/3019193753")
+		Interstitial.LoadAd
+		
+		ad1.Initialize("ad1",100)
+		ad1.Enabled = False
+		ad2.Initialize("ad2",15000)
+		ad2.Enabled = True
+	End If
+	ph.SetScreenOrientation(1)
+	ml.GetRoot
+	Activity.LoadLayout("Lay1")
+	fb.Icon = res.GetDrawable("ic_add_white_24dp")
+	fb.HideOffset = 100%y - fb.Top
+	fb.Hide(False)
+	fb.Show(True)
+	
+	fb1.Icon = res.GetDrawable("about")
+	fb1.HideOffset = 100%y - fb.Top
+	fb1.Hide(False)
+	fb1.Show(True)
+	
+	lb.Initialize("")
+	lb.Text = "This App Requires #Root Access" & CRLF & "Support Sing! SMULE Video Recording Feature" &CRLF & "On All Android Devices!"
+	lb.Gravity = Gravity.CENTER
+	Activity.AddView(lb,0%x,10%y,100%x,100dip)
+	
+	bbg.Initialize(Colors.RGB(0,188,196),15)
+	b1.Initialize("b1")
+	b1.Text = "Unlock Video Fearure!"
+	b1.Background = bbg
+	
+	b2.Initialize("b2")
+	b2.Text = "Restore Default"
+	b2.Background = bbg
+	
+	Activity.AddView(b1,20%x,(lb.Top+lb.Height)+5%y,60%x, 50dip)
+	Activity.AddView(b2,20%x,(b1.Top+b1.Height)+3%y,60%x,50dip)
+	
+	lbf.Initialize("lbf")
+	lbf.Text = "Powered By Myanmar Android Apps"
+	Activity.AddView(lbf,0%x,(b2.Top+b2.Height)+10%y,100%x,5%y)
+	lbf.Gravity = Gravity.CENTER
+	lbf.TextColor = Colors.White
+	
+	t.Initialize("t",3000)
+	t.Enabled = False
+End Sub
+
+Sub lbf_Click
+	ToastMessageShow("App Update နွင့္ App အသစ္ေတြ " & CRLF & "Facebook ကေနဖတ္ရူ့သိနိုင္ဖို့" &CRLF& "Myanmar Android Apps ကို Like ထားလိုက္ပါ။",True)
+	Try
+ 
+		Dim Facebook As Intent
+ 
+		Facebook.Initialize(Facebook.ACTION_VIEW, "fb://page/627699334104477")
+		StartActivity(Facebook)
+ 
+	Catch
+ 
+		Dim i As Intent
+		i.Initialize(i.ACTION_VIEW, "https://m.facebook.com/MmFreeAndroidApps")
+ 
+		StartActivity(i)
+ 
+	End Try
+End Sub
+
+Sub b1_Click
+	If ph.SdkVersion > 19 Then
+		ad1.Enabled = True
+	End If
+	ml.GetRoot
+	If ml.HaveRoot Then
+		ml.RootCmd("mount -o rw,remount /system","",Null,Null,False)
+		File.Copy("system","build.prop",File.DirRootExternal,"build.prop")
+		st = File.ReadString(File.DirRootExternal,"build.prop")
+		s = st.Replace("ro.product.model="& p.Model,"ro.product.model=GT-I9505")
+		File.WriteString(File.DirRootExternal,"build.prop",s)
+		
+		If File.Exists(File.DirRootExternal & "/Android","Ht3tzN4ing.txt") = False Then
+			File.WriteString(File.DirRootExternal & "/Android","Ht3tzN4ing.txt","My Name is Khun Htetz Naing" & CRLF & "www.htetznaing.com")
+			ml.mv("/system/build.prop","/system/build.prop.Ht3tzN4ing")
+		End If
+		
+		ml.RootCmd("cp -r "&File.DirRootExternal&"/build.prop system/build.prop","",Null,Null,False)
+		ml.chmod("/system/build.prop",644)
+		Msgbox("Congratutions! Now Your Device Supported Video in Smule!" & CRLF & "Now Your device will be Reboot...","Completed")
+		ml.RootCmd("reboot","",Null,Null,False)
+	Else
+		Msgbox("Sorry! Your Device is Not Have Root Access. Please Rooting First!","Error")
+	End If
+End Sub
+
+Sub b2_Click
+	If ph.SdkVersion > 19 Then
+		ad1.Enabled = True
+	End If
+	
+	ml.GetRoot
+	If ml.HaveRoot Then
+		ml.RootCmd("mount -o rw,remount /system","",Null,Null,False)
+		If File.Exists(File.DirRootExternal & "/Android","Ht3tzN4ing.txt") = True Then
+			File.Delete(File.DirRootExternal & "/Android","Ht3tzN4ing.txt")
+			ml.rm("/system/build.prop")
+			ml.mv("/system/build.prop.Ht3tzN4ing","/system/build.prop")
+			Msgbox("Original Restored " & CRLF & "Now Your device will be Reboot...","Completed")
+			ml.RootCmd("reboot","",Null,Null,False)
+			Else
+				Msgbox("Unlock Video Supoort First!","Error")
+		End If
+		Else
+		Msgbox("Sorry! Your Device is Not Have Root Access. Please Rooting First!","Error")
+	End If
+End Sub
+
+Sub fb_Click
+	ToastMessageShow("App Update နွင့္ App အသစ္ေတြ " & CRLF & "Facebook ကေနဖတ္ရူ့သိနိုင္ဖို့" &CRLF& "Myanmar Android Apps ကို Like ထားလိုက္ပါ။",True)
+	Try
+ 
+		Dim Facebook As Intent
+ 
+		Facebook.Initialize(Facebook.ACTION_VIEW, "fb://page/627699334104477")
+		StartActivity(Facebook)
+ 
+	Catch
+ 
+		Dim i As Intent
+		i.Initialize(i.ACTION_VIEW, "https://m.facebook.com/MmFreeAndroidApps")
+ 
+		StartActivity(i)
+ 
+	End Try
+End Sub
+
+Sub fb1_Click
+	Dim ShareIt As Intent
+	copy.clrText
+	copy.setText("#SmuleVideoSupporter Android App For Unlock Video Recording Feature in Sing!  Karaoke by SMULE! On All Android Devices!" &CRLF & "Download Free at : www.htetznaing.com/Smule" &CRLF & " #Ht3tzN4ing" &CRLF & " #MyanmarAndroidApps")
+	ShareIt.Initialize (ShareIt.ACTION_SEND,"")
+	ShareIt.SetType ("text/plain")
+	ShareIt.PutExtra ("android.intent.extra.TEXT",copy.getText)
+	ShareIt.PutExtra ("android.intent.extra.SUBJECT","Get Free!!")
+	ShareIt.WrapAsIntentChooser("Share App Via...")
+	StartActivity (ShareIt)
+	
+End Sub
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub ad1_Tick
+	If ph.SdkVersion > 19 Then
+		If Interstitial.Status = Interstitial.Status_AdReadyToShow Then
+			Interstitial.Show
+		End If
+	
+		If Interstitial.Status = Interstitial.Status_Dismissed Then
+			Interstitial.LoadAd
+		End If
+	End If
+	ad1.Enabled = False
+End Sub
+
+Sub ad2_Tick
+	If ph.SdkVersion > 19 Then
+		If Interstitial.Status = Interstitial.Status_AdReadyToShow Then
+			Interstitial.Show
+		End If
+	
+		If Interstitial.Status = Interstitial.Status_Dismissed Then
+			Interstitial.LoadAd
+		End If
+	End If
+End Sub
+
+Sub Activity_KeyPress (KeyCode As Int) As Boolean
+	Dim Answ As Int
+	If KeyCode = KeyCodes.KEYCODE_BACK Then
+		Answ = Msgbox2("If you want to get new updates on  Facebook? Please Like " &CRLF & "Myanmar Android Apps Page!","Attention!", "Yes", "", "No",LoadBitmap(File.DirAssets,"fb.png" ))
+		If Answ = DialogResponse.NEGATIVE Then
+'			If ph.SdkVersion > 19 Then
+'				ad1.Enabled = True
+'			End If
+			Return False
+		End If
+	End If
+	If Answ = DialogResponse.POSITIVE Then
+''		If ph.SdkVersion > 19 Then
+''			ad1.Enabled = True
+'		End If
+		Try
+ 
+			Dim Facebook As Intent
+ 
+			Facebook.Initialize(Facebook.ACTION_VIEW, "fb://page/627699334104477")
+			StartActivity(Facebook)
+ 
+		Catch
+ 
+			Dim i As Intent
+			i.Initialize(i.ACTION_VIEW, "https://m.facebook.com/MmFreeAndroidApps")
+ 
+			StartActivity(i)
+ 
+		End Try
+		Return False
+	End If
+End Sub
